@@ -77,13 +77,16 @@ class DeleteAddress(APIView):
 
                     else:
 
-                        return Response({'message': 'You can not delete  default address without any other address'})
+                        return Response({'message': 'You can not delete  default address without any other address'}, status=status.HTTP_404_NOT_FOUND)
 
                     address_item.delete();
 
-                    return Response(status=status.HTTP_200_OK)
+                    return Response({'message': 'Deleted Successfully'},status=status.HTTP_200_OK)
+                
         except models.Address.DoesNotExist:
             return Response({'message': 'Address does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class SetDefaultAddress(APIView):
     permission_classes = [IsAuthenticated]
